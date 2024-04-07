@@ -1,0 +1,30 @@
+services:
+  cache1:
+    image: "quay.io/infinispan/server:15.0.0.Final"
+    environment:
+      - SERVER_LIBS="org.postgresql:postgresql:42.7.1"
+      - DB_URL=jdbc:postgresql://dbhost:5432/db
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+    volumes:
+      - ./infinispan.xml:/opt/infinispan/server/conf/infinispan.xml
+    ports:
+      - "11222:11222"
+    depends_on:
+      dbhost:
+        condition: service_healthy
+
+  dbhost:
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_DB=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    user: postgres
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
