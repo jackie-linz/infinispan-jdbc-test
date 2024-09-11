@@ -1,11 +1,13 @@
 services:
   cache1:
-    image: "quay.io/infinispan/server:15.0.0.Final"
+    image: "quay.io/infinispan/server:15.1"
     environment:
       - SERVER_LIBS="org.postgresql:postgresql:42.7.1"
       - DB_URL=jdbc:postgresql://dbhost:5432/db
       - DB_USERNAME=postgres
       - DB_PASSWORD=password
+      - USER=admin
+      - PASS=pass
     volumes:
       - ./infinispan.xml:/opt/infinispan/server/conf/infinispan.xml
     ports:
